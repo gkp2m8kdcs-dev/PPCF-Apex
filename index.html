@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="PPCF Apex — A privacy-first personal finance and investment journal for iPhone. Track accounts, transactions, and portfolio balances fully on-device." />
+<meta name="theme-color" content="#0B0B0F" />
+<title>PPCF Apex — Personal Investment & Finance Journal</title>
+<style>
+  :root {
+    --bg: #0B0B0F;
+    --bg-2: #13131A;
+    --surface: #1A1A22;
+    --border: #2A2A35;
+    --text: #F2F2F7;
+    --muted: #9A9AA8;
+    --accent: #7C8CFF;
+    --accent-2: #5EE6C1;
+    --grad: linear-gradient(135deg, #7C8CFF 0%, #5EE6C1 100%);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  header.nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px); background: rgba(11, 11, 15, 0.7); border-bottom: 1px solid var(--border); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.3px; }
+  .brand-mark { width: 28px; height: 28px; border-radius: 8px; background: var(--grad); display: inline-block; }
+  nav ul { list-style: none; display: flex; gap: 22px; }
+  nav ul a { color: var(--muted); font-size: 14px; }
+  nav ul a:hover { color: var(--text); text-decoration: none; }
+  .cta-btn { background: var(--grad); color: #0B0B0F; padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 14px; }
+  .cta-btn:hover { text-decoration: none; opacity: 0.92; }
+
+  .hero { padding: 96px 0 72px; position: relative; }
+  .hero .grid-bg { position: absolute; inset: 0; background-image: radial-gradient(rgba(124,140,255,0.15) 1px, transparent 1px); background-size: 22px 22px; opacity: 0.4; mask-image: radial-gradient(ellipse at top, black 30%, transparent 75%); pointer-events: none; }
+  .hero-inner { position: relative; display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
+  .eyebrow { display: inline-block; padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; font-size: 12px; color: var(--muted); margin-bottom: 22px; }
+  h1 { font-size: clamp(36px, 5vw, 56px); line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 18px; }
+  h1 .accent { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 560px; margin-bottom: 32px; }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn-ghost { padding: 12px 20px; border-radius: 12px; border: 1px solid var(--border); color: var(--text); font-weight: 500; }
+  .btn-ghost:hover { text-decoration: none; background: var(--bg-2); }
+
+  .phone-mock { position: relative; aspect-ratio: 9 / 19; max-width: 360px; margin-left: auto; border-radius: 44px; padding: 12px; background: linear-gradient(160deg, #2A2A35, #13131A); border: 1px solid var(--border); box-shadow: 0 30px 80px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.03); }
+  .phone-screen { width: 100%; height: 100%; border-radius: 32px; background: var(--bg); overflow: hidden; position: relative; }
+  .phone-notch { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); width: 90px; height: 26px; background: #000; border-radius: 14px; z-index: 2; }
+  .phone-screen::before { content: ""; position: absolute; top: 56px; left: 20px; right: 20px; height: 70px; border-radius: 16px; background: linear-gradient(135deg, rgba(124,140,255,0.25), rgba(94,230,193,0.18)); border: 1px solid rgba(255,255,255,0.06); }
+  .phone-screen::after { content: ""; position: absolute; top: 140px; left: 20px; right: 20px; bottom: 20px; border-radius: 16px; background: repeating-linear-gradient(180deg, rgba(255,255,255,0.04) 0 14px, transparent 14px 30px); }
+
+  section { padding: 80px 0; border-top: 1px solid var(--border); }
+  .section-title { font-size: 28px; letter-spacing: -0.01em; margin-bottom: 12px; }
+  .section-sub { color: var(--muted); margin-bottom: 48px; max-width: 640px; }
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 26px; transition: transform 0.2s ease, border-color 0.2s ease; }
+  .card:hover { transform: translateY(-2px); border-color: rgba(124,140,255,0.4); }
+  .card .ico { width: 38px; height: 38px; border-radius: 10px; background: rgba(124,140,255,0.12); color: var(--accent); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-weight: 700; }
+  .card h3 { font-size: 17px; margin-bottom: 8px; }
+  .card p { color: var(--muted); font-size: 14px; }
+
+  .pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .pillar { background: var(--bg-2); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
+  .pillar .num { font-size: 26px; font-weight: 700; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .pillar h4 { font-size: 14px; margin: 8px 0 4px; }
+  .pillar p { color: var(--muted); font-size: 13px; }
+
+  .cta-banner { background: linear-gradient(135deg, rgba(124,140,255,0.12), rgba(94,230,193,0.10)); border: 1px solid var(--border); border-radius: 24px; padding: 48px; text-align: center; }
+  .cta-banner h2 { font-size: 30px; margin-bottom: 10px; }
+  .cta-banner p { color: var(--muted); margin-bottom: 24px; }
+
+  footer { border-top: 1px solid var(--border); padding: 36px 0 48px; color: var(--muted); font-size: 13px; }
+  .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
+  .footer-links { display: flex; gap: 18px; }
+  .footer-links a { color: var(--muted); }
+
+  @media (max-width: 880px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .phone-mock { margin: 24px auto 0; }
+    .features { grid-template-columns: 1fr 1fr; }
+    .pillars { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .features, .pillars { grid-template-columns: 1fr; }
+    nav ul { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="brand"><span class="brand-mark"></span> PPCF Apex</div>
+    <nav>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#privacy">Privacy</a></li>
+        <li><a href="support.html">Support</a></li>
+        <li><a href="terms.html">Terms</a></li>
+      </ul>
+    </nav>
+    <a class="cta-btn" href="#download">Get on iPhone</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="grid-bg"></div>
+  <div class="container hero-inner">
+    <div>
+      <span class="eyebrow">Now on the App Store</span>
+      <h1>Your entire financial life,<br/><span class="accent">beautifully on-device.</span></h1>
+      <p class="lede">PPCF Apex is a privacy-first personal finance and investment journal for iPhone. Track accounts, transactions, transfers, and portfolio balances — fully local, zero ads, zero subscriptions.</p>
+      <div class="hero-actions">
+        <a class="cta-btn" href="#download">Download for iPhone</a>
+        <a class="btn-ghost" href="#features">Explore features</a>
+      </div>
+    </div>
+    <div class="phone-mock" aria-hidden="true">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <h2 class="section-title">Everything you need. Nothing you don't.</h2>
+    <p class="section-sub">Designed for people who want clarity, control, and complete ownership of their financial data — without giving it away to the cloud.</p>
+    <div class="features">
+      <div class="card">
+        <div class="ico">8</div>
+        <h3>Eight account types</h3>
+        <p>Cash, checking, savings, credit cards, brokerage, retirement, real estate, and loans — all in one place.</p>
+      </div>
+      <div class="card">
+        <div class="ico">12</div>
+        <h3>Twelve currencies</h3>
+        <p>Multi-currency support with automatic conversion to your home currency for an accurate net worth view.</p>
+      </div>
+      <div class="card">
+        <div class="ico">+</div>
+        <h3>Income, expenses & transfers</h3>
+        <p>Log every movement of money with categories, tags, and photo receipts captured from the camera or library.</p>
+      </div>
+      <div class="card">
+        <div class="ico">∑</div>
+        <h3>Smart dashboard</h3>
+        <p>Net worth, month-over-month change, assets vs liabilities, cash on hand, and four personal insights.</p>
+      </div>
+      <div class="card">
+        <div class="ico">∿</div>
+        <h3>Custom charts</h3>
+        <p>Area, donut, bar, line, and heatmap visualizations rendered with Core Graphics — no third-party libraries.</p>
+      </div>
+      <div class="card">
+        <div class="ico">★</div>
+        <h3>Investment journal</h3>
+        <p>Review positions, dividends, and capital gains over time. A journal and a lens — never a brokerage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="privacy">
+  <div class="container">
+    <h2 class="section-title">Privacy by design.</h2>
+    <p class="section-sub">PPCF Apex is built around a single principle: your financial data belongs to you, and only to you.</p>
+    <div class="pillars">
+      <div class="pillar">
+        <div class="num">01</div>
+        <h4>On-device only</h4>
+        <p>All entries and attachments live inside the iOS app sandbox. They are never uploaded.</p>
+      </div>
+      <div class="pillar">
+        <div class="num">02</div>
+        <h4>No account required</h4>
+        <p>No login, no signup, no email verification. Open the app and start journaling.</p>
+      </div>
+      <div class="pillar">
+        <div class="num">03</div>
+        <h4>No analytics</h4>
+        <p>Zero trackers, zero SDKs, zero advertising identifiers, zero telemetry.</p>
+      </div>
+      <div class="pillar">
+        <div class="num">04</div>
+        <h4>No network calls</h4>
+        <p>The app does not connect to exchanges, brokers, or any external data feed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="download">
+  <div class="container">
+    <div class="cta-banner">
+      <h2>Start your journal today.</h2>
+      <p>Free, ad-free, and built to stay out of your way. iPhone only, iOS 16 and later.</p>
+      <a class="cta-btn" href="https://apps.apple.com">Download on the App Store</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-grid">
+    <div>© 2026 PPCF Apex. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy</a>
+      <a href="support.html">Support</a>
+      <a href="terms.html">Terms of Use</a>
+      <a href="mailto:becipora79@gmail.com">becipora79@gmail.com</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
